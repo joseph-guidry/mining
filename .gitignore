@@ -1,4 +1,10 @@
+old*
 *pyc*
 *.bak
 *~
 zerg-3
+map*
+world.py
+sample.txt
+timeout.py
+
