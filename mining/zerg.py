@@ -35,12 +35,12 @@ class Overlord(Zerg):
         self.zerg = {}
         self.maps = {}
 
-        for _ in range(6):
+        for _ in range(1):
             z = BaseDrone()
             self.zerg[id(z)] = z          
 
     def add_map(self, map_id, summary):
-        """ Allows Overlord to knwo about multiple maps? """
+        """ Allows Overlord to know about multiple maps? """
         self.maps[map_id] = summary
 
     def action(self, map_context=None):
@@ -57,6 +57,14 @@ class Overlord(Zerg):
 class Drone(Zerg):
     """ This is base drone class """
 
+    def __init__(self, health, capacity, moves):
+        """ Parent Drone Constructor """
+        """ Constructor for Base Drone, pass number of refined minerals"""
+        self.health = health * 10
+        self.capacity = capacity * 5
+        self.moves = int(moves / 3)
+        self.steps = 0
+
     @classmethod
     def get_init_cost(cls):
         """ Return the cost value for a drone object """
@@ -70,12 +78,16 @@ class Drone(Zerg):
         """ Inherited method for all Drone subclasses """
         new = randint(0, 3)
         if new == 0 and context.north in '* ':
+            self.steps += 1
             return 'NORTH'
         elif new == 1 and context.south in '* ':
+            self.steps += 1
             return 'SOUTH'
         elif new == 2 and context.east in '* ':
+            self.steps += 1
             return 'EAST'
         elif new == 3 and context.west in '* ':
+            self.steps += 1
             return 'WEST'
         else:
             return 'CENTER'
@@ -87,53 +99,43 @@ class BaseDrone(Drone):
     
     init_value = 9
     
-
     def __init__(self, health=4, capacity=2, moves=3):
         """ Constructor for Base Drone, pass number of refined minerals"""
-        self.health = health * 10
-        self.capacity = capacity * 5
-        self.moves = int(moves / 3)
-        self.steps = 0
+        super().__init__(health, capacity, moves)
     
-    def action(self, map_context):
+    # def action(self, map_context):
         """ Allows overlord to deploy, retrieve or None """
         """ This is based on drone ID """
-        pass
+        # pass
 
 
 class ScoutDrone(Drone):
     """ Extend Drone class to specialized scout Drone """
     """ Health = 20, Capacity = 5, Move = 2 """
+
     init_value = 9
-    steps = 0
 
     def __init__(self, health=2, capacity=1, moves=6):
         """ Constructor for Base Drone, pass number of refined minerals"""
-        self.health = health
-        self.capacity = capacity * 5
-        self.moves = int(moves / 3)
-        self.steps = 0
+        super().__init__(health, capacity, moves)
 
-    def action(self, map_context):
+    # def action(self, map_context):
         """ Allows overlord to deploy, retrieve or None """
         """ This is based on drone ID """
-        pass
+       # pass
     
 
 class HaulerDrone(Drone):
     """ Extend Drone class to specialized hauler Drone """
     """ Health = 20, Capacity = 20, Move = 1 """
+
     init_value = 9
-    steps = 0
 
-    def __init__(self, health=2, capacity=4, moves=3):
+    def __init__(self, health=1, capacity=5, moves=3):
         """ Constructor for Base Drone, pass number of refined minerals"""
-        self.health = health
-        self.capacity = capacity * 5
-        self.moves = moves / 3
-        self.steps = 0
+        super().__init__(health, capacity, moves)
 
-    def action(self, map_context):
+    # def action(self, map_context):
         """ Allows overlord to deploy, retrieve or None """
         """ This is based on drone ID """
-        pass
+       # pass

@@ -37,7 +37,7 @@ class TestMining(unittest.TestCase):
         new.add_map(1, 1.15)
         self.assertTrue(len(new.maps), 1)
         self.assertTrue(new.maps[1], 1.15)
-        new.add_map(2, 3.78)
+
 
 if __name__ == "__main__":
     unittest.main()
