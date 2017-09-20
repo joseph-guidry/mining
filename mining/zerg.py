@@ -33,14 +33,12 @@ class Overlord(Zerg):
         """ Constuct a Overlord with default values if not provided """
         self.health = 5
         self.ticks = total_ticks
-        self.turns = 0
         self.refined_minerals = refined_minerals
         self.zerg = {}
         self.maps = {}
         self.graphs = {}
         self.available_drones = []
         self.deployed_drones = []
-        self.output = []
 
         for _ in range(1):
             z = BaseDrone(overlord=self)
@@ -50,14 +48,10 @@ class Overlord(Zerg):
         for drone_id in self.zerg.keys():
             self.available_drones.append(drone_id)
 
-
-
     def add_map(self, map_id, summary):
         """ Allows Overlord to know about multiple maps? """
         self.maps[map_id] = summary
         self.graphs[map_id] = Graph()
-        # Add space for map output to hold string representation of the map
-        self.output.append("")
 
     def get_dashboard(self):
         return Dashboard(self)
