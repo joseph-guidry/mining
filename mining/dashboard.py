@@ -14,7 +14,7 @@ class Dashboard:
         self.maps = {}
         
         for map_id in self.map_ids:
-            self.maps[map_id] = self.convert_to_string(map_id)
+            self.maps[map_id] = '?'
 
     def __str__(self):
         border = '=' * 30
@@ -24,9 +24,9 @@ class Dashboard:
             output.append("\nMap ID: {}\n".format(key))
             output.append(border)
             output.append('\n')
-            output.append(self.maps[key])
+            output.append(self.convert_to_string(key))
         output.append(border)
-        return "".join(output)
+        return "".join([item for item in output if item])
         
     # list of keys should be list of keys from graph object
     def convert_to_string(self, map_id):
