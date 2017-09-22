@@ -7,10 +7,10 @@ class Cell:
         self.id = node
         self.symbol = "?"
         self.adjacent = {}
-
-    def __str__(self):
-        return str(self.id), str([x.id for x in self.adjacent])
     
+    def __str__(self):
+        return str(self.id) + self.symbol +' Adjacent: ' + str([x.id for x in self.adjacent])
+
     def __eq__(self, other):
         # print("COMPARING KEYS")
         # print(self.id, other.id)
@@ -54,9 +54,6 @@ class Cell:
 
     def get_symbol(self, neighbor):
         return self.adjacent[neighbor][1]
-
-    def __str__(self):
-        return str(self.id) + self.symbol +' Adjacent: ' + str([x.id for x in self.adjacent])
 
 
 class Graph:

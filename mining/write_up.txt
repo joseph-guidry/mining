@@ -1,0 +1,67 @@
+Name: Guidry, Joseph
+Date: 22 SEPT 2017
+Current Module: Object Oriented Programming with Python Capstone
+Project Name:  Mining
+
+Project Goals:
+	<A two to three sentence description of the project and its intent>
+     
+	- The goal of this project is to incorporate the use an external API to to create a class Overlord that has interaction with with drone objects. There are three different types, one base and two custom types, if chosen.  The interactions included the overlord and drones are driven by an external API calling certain methods within the classes of mainly each objects action method. 
+	
+Considerations:
+	<A bulleted list of considerations and conditions which affected the design of your project>
+    - Implementing objects that describe different custom items, Overlord and Drones.
+    - Apply the DRY principle
+    - Instatiate the Overlord with drones once it is created.
+    - Allow Overlord to handle deployment and returning of the drones and ensuring placement onto a map at the landing zone.
+    - Provide logic to Drones that has the goals of searching the map for minerials. 
+
+
+Initial Design:
+	<A paragraph or more that adequately describes your program's structure and layout discussing the various modules (.c and corresponding .h files) that you implemented>
+
+    Once given the project, the main requirements pointed to two problems that needed to be solved, mining minerals and using a GUI to print the discovered map in a window. The design to build the requirements of the Overlord and Drones classes which could handle random actions on the map.  This lead to the design of the map collection process, I began using a grid, or nested list structure, I found this to be problematic, and scraped the idea, using nested dictionaries was also attempted and abandoned. Eventually I began to work on a custom graph object, found in graph.py, which holds cell objects, which I was able to hold all the information needed to produce output of discovered data from maps for the dashboard. Next, the implementation of smarter mineral discovery and mining was added to the action methods of the drones. The Overlord also needed to implement a way to determine if the landing zone was clear. 
+	
+	This program is composed of a couple python files:
+
+    All additional files are contained within the mining package.
+    
+    zerg.py: This file holds the code related to all the zergs, Overlord and Drones, including their methods and attributes.
+    graph.py: This file holds the code for drones to populate a graph that was going to be used by the Graphical User Interface, which has been modified to process map data for the dashboard.
+    dashboard.py: Allows the data stored in the graph objects to produce output of what the drones have discoverd on the maps. 
+
+Data Flow:
+
+    In this program, the driver program uses the zerg.py file as an API with access to limited methods and attributes directly. On each tick, the Overlord will be called to complete its action method, which handles the deployment and return of drones to collected harvested minerals. This action is called only once per tick. Next, the program will iterate and call the action method on each drone that has been created for the Overlord.  This action will return a direction "NORTH", "EAST", "SOUTH", or "WEST", and the driver will do its corresponding actions.  During the tick, each drone can possibly have more than one action call, my drones do not implement mulitple moves at this time. 
+
+Communication Protocol:
+
+    There is no use of a custom communication protocol directly in this program. The drones will set a flag when ready to be returned, which is scanned each turn by the Overlord. The drones do have a reference and access to the information that is held by the Overlord, but there are no commands or actions done due to this interaction. 
+
+Potential Pitfalls:
+
+    - Understanding requirements and API layout and context usage. 
+    - Collecting map data from drones.
+    - The ability to put output to a tkinter window.
+    - Then update this output after each action.
+    - Signal to the Overlord for pickup.
+    - Check landing zone prior to deployment.
+    - Mine minerals efficiently.
+
+Test Plan:
+    User Test:
+        - Run program with base requirements.
+        - Observe debug/print statements and desired output.
+
+    Test Cases:
+        - Test developmet of individual Classes using TDD.
+        - Incorporate usability into basic random action that was provided. 
+        - Use debug statement to access,then collected useable data, that would be used to create desired output.
+        - Create Tkinter usability to meet requirements.
+        - Merge collected data output into tkinter windows. -> Removed Requirement
+        - Retool output to work with Dashboard object.
+        - Drone return/pickup.
+        - Attempt to find alternate paths if drone becomes stuck.
+
+Conclusion:
+        In this project, there were two major priorities that I noticed would need time and research put towards accomplishing. One included discovering the map contents without access to the map, and how to display the data recovered into something that could be presented in a tkinter/GUI winodw.  I began by building the required classes and retooling the provide zerg.py files to along the Overlord and drones to work with random return values. This lead to the collection of map data, and conversion into how to create output that matched the map on the console. The GUI portion I found was the most complex, with the most limited amount of time spent prior, that needed the most research, especially how to update the data per turn in each window.  Eventually, this portion of the project was removed by the instructors.  The remaineder of the project was spent attempting to make the drones search and mine as efficiently as possible. Again, attempting to create an API was a difficult challenge to understand and proved to be beneficial. 
