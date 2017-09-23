@@ -1,4 +1,8 @@
 #! /usr/bin/env python3
+"""
+MODULE DOCUMENTATION
+"""
+
 
 class Cell:
     """ A cell holds its neighbors and symbols in them """
@@ -12,8 +16,6 @@ class Cell:
         return str(self.id) + self.symbol +' Adjacent: ' + str([x.id for x in self.adjacent])
 
     def __eq__(self, other):
-        # print("COMPARING KEYS")
-        # print(self.id, other.id)
         x1, y1 = self.id
         x2, y2 = other.id
         return x1 == x2 and y1 == y2
@@ -41,9 +43,6 @@ class Cell:
 
     def add_neighbor(self, neighbor, data):
         """ Data = ["DIRECTION", "SYMBOL"] """
-        # print(type(neighbor), type(data))
-        # print("beginning", self.id, self.symbol, "Adding Neighbor ", neighbor)
-        # print("Attempting to set cell symbel", neighbor.id, data[1])
         self.adjacent[neighbor] = data
 
     def get_connection(self):
@@ -77,7 +76,6 @@ class Graph:
         return iter(self.cells_dict.values())
 
     def add_cell(self, node):
-        # print("adding node", type(node))
         self.num_cell = self.num_cell + 1
         new_node = Cell(node)
         self.cells_dict[node] = new_node
@@ -90,21 +88,17 @@ class Graph:
             return None
 
     def add_edge(self, src, dst, data=None):
+        """ Update the graph with the values at each adjacent cell """
 
-        # print("Looking to find a place to insert the symbol into cell.symbol", type(dst), dst, type(data), data)
-        
         if src not in self.cells_dict:
             self.add_cell(src)
         if dst not in self.cells_dict:
-            # print(dst, "Symbol = [ ", data[1], ']')
             self.add_cell(dst)
-        # print(dst, data[1])
         self.cells_dict[dst].symbol = data[1]
 
-        # print("adding src -> dest ")
         self.cells_dict[src].add_neighbor(self.cells_dict[dst], data)
-        # print("adding dest -> src ")
         self.cells_dict[dst].add_neighbor(self.cells_dict[src], data)
     
     def get_cells(self):
+        """ Return the cells that are in the graph """
         return self.cells_dict.keys()

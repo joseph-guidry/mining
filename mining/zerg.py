@@ -5,7 +5,7 @@ MODULE DOCUMENTATION
 """
 
 import abc
-from random import randint, choice
+from random import choice
 from mining.graph import *
 from mining.dashboard import *
     
@@ -40,8 +40,12 @@ class Overlord(Zerg):
         self.available_drones = []
         self.deployed_drones = {}
 
-        for _ in range(1):
-            z = BaseDrone(overlord=self)
+        # This configuration utilizes the custom drone classes
+        for _ in range(3):
+            z = ScoutDrone(overlord=self)
+            self.refined_minerals -= z.get_init_cost()
+            self.zerg[id(z)] = z
+            z = HaulerDrone(overlord=self)
             self.refined_minerals -= z.get_init_cost()
             self.zerg[id(z)] = z
 
@@ -54,16 +58,17 @@ class Overlord(Zerg):
         self.graphs[map_id] = Graph()
 
     def dashboard(self):
+        """ Return dashboard object that displays seen map data """
         return Dashboard(self)
 
     def action(self, map_context=None):
         """ Allows overlord to deploy, retrieve or None """
         """ This is based on drone ID """
         self.ticks -= 1
-        print("Available", self.available_drones)
-        print("Deployed ", self.deployed_drones)
+        #print("Available", self.available_drones)
+        # print("Deployed ", self.deployed_drones)
         map_id = choice(list(self.graphs.keys()))
-        print("Map_id ", map_id)
+        # print("Map_id ", map_id)
 
         # Check if drone has set its pickup flag for return.
         for drone in list(self.zerg.keys()):
@@ -71,17 +76,17 @@ class Overlord(Zerg):
                 self.reinitialize_drone(self.zerg[drone])
                 self.available_drones.append(drone)
                 self.deployed_drones.pop(drone, None)
-                print("After returning drone", self.available_drones)
+                # print("After returning drone", self.available_drones)
                 return 'RETURN {}'.format(drone)
         
         # Get a list of the map_ids and send drone to a specific map
         # If there are more drones to deploy then do that.
-        print("Available drones ", len(self.available_drones), self.available_drones)
+        # print("Available drones ", len(self.available_drones), self.available_drones)
         drone_to_map = list([drone for drone in self.deployed_drones.keys() 
                              if self.deployed_drones[drone] == map_id])
         for drone in drone_to_map:
             if self.zerg[drone].position == (0,0):
-                print("Drone", drone, self.zerg[drone].position )
+                # print("Drone", drone, self.zerg[drone].position )
                 return "NONE" 
 
         if len(self.available_drones) > 0:
@@ -113,8 +118,7 @@ class Overlord(Zerg):
 class Drone(Zerg):
     """ This is base drone class """
 
-    def __init__(self, health, capacity, moves, overlord):
-        """ Parent Drone Constructor """
+    def __init__(self, health=4, capacity=2, moves=3, overlord=None):
         """ Constructor for Base Drone, pass number of refined minerals"""
         self.overlord = overlord
         self.map_id = -1
@@ -144,8 +148,8 @@ class Drone(Zerg):
     def action(self, context):
         
         """ Inherited method for all Drone subclasses """
-        print("Starting turn: " + str(self.position) )
-        print("Path taken", self.previous_positions)
+        # print("Starting turn: " + str(self.position) )
+        # print("Path taken", self.previous_positions)
         # This ensures the drone moved on the grid 
         # and will not add position to path
         try:
@@ -180,7 +184,7 @@ class Drone(Zerg):
        
         # Indicate that a drone is ready for pickup.
         if (x, y) == (0,0) and self.movements > 0:
-            print("On landing zone and have minerals")
+            # print("On landing zone and have minerals")
             self.pick_up = True
             return "CENTER"
 
@@ -190,7 +194,7 @@ class Drone(Zerg):
         """
 
         if self.movements + 1 >= self.overlord.ticks or self.storage <= 0:
-            print("\tLETS to move backwards")
+            # print("\tLETS to move backwards")
             self.return_flag = True
             return self.move_to_previous(self.position, input_scheme)
 
@@ -199,15 +203,15 @@ class Drone(Zerg):
         after "CENTER" has been returned.
         """
 
-        print("Is return flag set ? ", self.return_flag)
+        # print("Is return flag set ? ", self.return_flag)
         if self.return_flag == True:
-            print("WERE STUCK LETS BACK TRACK a bit")
-            print("Previous Locations", self.previous_positions)
+            # print("WERE STUCK LETS BACK TRACK a bit")
+            # print("Previous Locations", self.previous_positions)
             adj_neighbors = [item for item in self.graph.cells_dict[self.position].adjacent.keys()]
-            print(adj_neighbors)
+            # print(adj_neighbors)
             for neighbor in adj_neighbors:
-                print(neighbor.id)
-                print(neighbor.symbol)
+                # print(neighbor.id)
+                # print(neighbor.symbol)
         
                 # Number of neighbors a coordinate has
                 # print(len(self.graph.cells_dict[neighbor.id].adjacent))
@@ -215,29 +219,29 @@ class Drone(Zerg):
                 # A list of neighbors with their coordinates
                 # neighbors = list([position.id for position in self.graph.cells_dict[neighbor.id].adjacent.keys()])
                 # print("list of neighbors", neighbors)
-                print("last position", self.last_position)
+                # print("last position", self.last_position)
                 if neighbor.id not in self.previous_positions:
                     if neighbor.id != self.last_position and neighbor.symbol in '* ':
-                        print("Moving somewhere", neighbor.id)
+                        # print("Moving somewhere", neighbor.id)
                         # Need to return direction to this ID!!!
                         # print(self.graph.cells_dict[self.position].adjacent)
                         get_direction = [item for item in self.graph.cells_dict[self.position].adjacent.keys()]
-                        print("number of adj", len(get_direction))
-                        print("Direction", input_scheme)
+                        # print("number of adj", len(get_direction))
+                        # print("Direction", input_scheme)
                         for next in input_scheme:
-                            print("checking the input scheme", next)
+                            # print("checking the input scheme", next)
                             if next[0] == neighbor.id:
                                 self.return_flag = False
-                                print( " LETS GO THIS WAY", next[1][0])
+                                # print( " LETS GO THIS WAY", next[1][0])
                                 self.position = neighbor.id
                                 # self.previous_positions.pop(-1)
                                 return next[1][0]
                             
-            print("LETS MOVE BACK ONE")
+            # print("LETS MOVE BACK ONE")
             return self.move_to_previous(self.position, input_scheme)
 
         if self.move_north(self.position) not in self.previous_positions and context.north in '* ':
-            print("NORTH")
+            # print("NORTH")
             self.previous_direction = "NORTH"
             if context.north in '*':
                 #self.previous_positions.pop(-1)
@@ -248,7 +252,7 @@ class Drone(Zerg):
                 self.movements += 1
                 return 'NORTH'
         elif self.move_east(self.position) not in self.previous_positions and context.east in '* ':
-            print("EAST")
+            # print("EAST")
             self.previous_direction = "EAST"
             if context.east in '*':
                 self.storage -= 1
@@ -258,7 +262,7 @@ class Drone(Zerg):
                 self.movements += 1
                 return 'EAST'
         elif self.move_south(self.position) not in self.previous_positions and context.south in '* ':
-            print("SOUTH")
+            # print("SOUTH")
             self.previous_direction = "SOUTH"
             if context.south in '*':
                 self.storage -= 1
@@ -268,7 +272,7 @@ class Drone(Zerg):
                 self.movements += 1
                 return 'SOUTH'
         elif self.move_west(self.position) not in self.previous_positions and context.west in '* ':
-            print("WEST")
+            # print("WEST")
             self.previous_direction = "WEST"
             if context.west in '*':
                 self.storage -= 1
@@ -278,7 +282,7 @@ class Drone(Zerg):
                 self.movements += 1
                 return 'WEST'
         else:
-            print("CENTER")
+            # print("CENTER")
             self.previous_direction = "CENTER"
             self.return_flag = True
             return 'CENTER'
@@ -287,9 +291,9 @@ class Drone(Zerg):
         try:
             self.last_position = self.previous_positions[-1]
             for dir_context in input_scheme:
-                print("dir_context", dir_context)
+                # print("dir_context", dir_context)
                 if dir_context[0] == self.previous_positions[-2]:
-                    print("DIRECTION ", dir_context[1][0])
+                    # print("DIRECTION ", dir_context[1][0])
                     self.position = self.previous_positions[-2]
                     self.previous_positions.pop(-1)
                     return dir_context[1][0]
@@ -317,18 +321,6 @@ class Drone(Zerg):
         x, y = position
         return (x - 1, y)
 
-        
-
-class BaseDrone(Drone):
-    """ Extend the drone class to default drones """
-    """ Health = 40, Capacity = 10, Move = 1 """
-    
-    init_value = 9
-    
-    def __init__(self, health=4, capacity=2, moves=3, overlord=None):
-        """ Constructor for Base Drone, pass number of refined minerals"""
-        super().__init__(health, capacity, moves, overlord)
-    
 
 class ScoutDrone(Drone):
     """ Extend Drone class to specialized scout Drone """

@@ -1,3 +1,6 @@
+*.pdf
+Dave*
+validate.py
 old*
 *pyc*
 *.bak
