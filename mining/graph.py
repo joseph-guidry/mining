@@ -11,9 +11,10 @@ class Cell:
         self.id = node
         self.symbol = "?"
         self.adjacent = {}
-    
+
     def __str__(self):
-        return str(self.id) + self.symbol +' Adjacent: ' + str([x.id for x in self.adjacent])
+        return str(self.id) + self.symbol + ' Adjacent: ' \
+                + str([x.id for x in self.adjacent])
 
     def __eq__(self, other):
         x1, y1 = self.id
@@ -68,7 +69,7 @@ class Graph:
         """ print the graph to see what is inside """
         output = []
         for key in self.cells_dict.keys():
-            output.append(str(self.cells_dict[key]) )
+            output.append(str(self.cells_dict[key]))
             output.append('\n')
         return "".join(output)
 
@@ -98,7 +99,7 @@ class Graph:
 
         self.cells_dict[src].add_neighbor(self.cells_dict[dst], data)
         self.cells_dict[dst].add_neighbor(self.cells_dict[src], data)
-    
+
     def get_cells(self):
         """ Return the cells that are in the graph """
         return self.cells_dict.keys()

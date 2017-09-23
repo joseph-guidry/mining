@@ -12,9 +12,9 @@ Considerations:
 	<A bulleted list of considerations and conditions which affected the design of your project>
     - Implementing objects that describe different custom items, Overlord and Drones.
     - Apply the DRY principle
-    - Instatiate the Overlord with drones once it is created.
+    - Instantiate the Overlord with drones once it is created.
     - Allow Overlord to handle deployment and returning of the drones and ensuring placement onto a map at the landing zone.
-    - Provide logic to Drones that has the goals of searching the map for minerials. 
+    - Provide logic to Drones that has the goals of searching the map for minerals. 
 
 
 Initial Design:
@@ -28,11 +28,11 @@ Initial Design:
     
     zerg.py: This file holds the code related to all the zergs, Overlord and Drones, including their methods and attributes.
     graph.py: This file holds the code for drones to populate a graph that was going to be used by the Graphical User Interface, which has been modified to process map data for the dashboard.
-    dashboard.py: Allows the data stored in the graph objects to produce output of what the drones have discoverd on the maps. 
+    dashboard.py: Allows the data stored in the graph objects to produce output of what the drones have discovered on the maps. 
 
 Data Flow:
 
-    In this program, the driver program uses the zerg.py file as an API with access to limited methods and attributes directly. On each tick, the Overlord will be called to complete its action method, which handles the deployment and return of drones to collected harvested minerals. This action is called only once per tick. Next, the program will iterate and call the action method on each drone that has been created for the Overlord.  This action will return a direction "NORTH", "EAST", "SOUTH", or "WEST", and the driver will do its corresponding actions.  During the tick, each drone can possibly have more than one action call, my drones do not implement mulitple moves at this time. 
+    In this program, the driver program uses the zerg.py file as an API with access to limited methods and attributes directly. On each tick, the Overlord will be called to complete its action method, which handles the deployment and return of drones to collected harvested minerals. This action is called only once per tick. Next, the program will iterate and call the action method on each drone that has been created for the Overlord.  This action will return a direction "NORTH", "EAST", "SOUTH", or "WEST", and the driver will do its corresponding actions.  During the tick, each drone can possibly have more than one action call, my drones do not implement multiple moves at this time. 
 
 Communication Protocol:
 
@@ -54,14 +54,14 @@ Test Plan:
         - Observe debug/print statements and desired output.
 
     Test Cases:
-        - Test developmet of individual Classes using TDD.
+        - Test development of individual Classes using TDD.
         - Incorporate usability into basic random action that was provided. 
-        - Use debug statement to access,then collected useable data, that would be used to create desired output.
-        - Create Tkinter usability to meet requirements.
+        - Use debug statement to access,then collected usable data, that would be used to create desired output.
+        - Create tkinter usability to meet requirements.
         - Merge collected data output into tkinter windows. -> Removed Requirement
         - Retool output to work with Dashboard object.
         - Drone return/pickup.
         - Attempt to find alternate paths if drone becomes stuck.
 
 Conclusion:
-        In this project, there were two major priorities that I noticed would need time and research put towards accomplishing. One included discovering the map contents without access to the map, and how to display the data recovered into something that could be presented in a tkinter/GUI winodw.  I began by building the required classes and retooling the provide zerg.py files to along the Overlord and drones to work with random return values. This lead to the collection of map data, and conversion into how to create output that matched the map on the console. The GUI portion I found was the most complex, with the most limited amount of time spent prior, that needed the most research, especially how to update the data per turn in each window.  Eventually, this portion of the project was removed by the instructors.  The remaineder of the project was spent attempting to make the drones search and mine as efficiently as possible. Again, attempting to create an API was a difficult challenge to understand and proved to be beneficial. 
+        In this project, there were two major priorities that I noticed would need time and research put towards accomplishing. One included discovering the map contents without access to the map, and how to display the data recovered into something that could be presented in a tkinter/GUI window.  I began by building the required classes and retooling the provide zerg.py files to along the Overlord and drones to work with random return values. This lead to the collection of map data, and conversion into how to create output that matched the map on the console. The GUI portion I found was the most complex, with the most limited amount of time spent prior, that needed the most research, especially how to update the data per turn in each window.  Eventually, this portion of the project was removed by the instructors.  The remainder of the project was spent attempting to make the drones search and mine as efficiently as possible. Again, attempting to create an API was a difficult challenge to understand and proved to be beneficial. 
